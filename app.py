@@ -14,7 +14,6 @@ import os
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, g, redirect, url_for, render_template, flash
 
-
 # create our little application :)
 app = Flask(__name__)
 
@@ -68,7 +67,7 @@ def close_db(error):
 @app.route('/')
 def show_entries():
     db = get_db()
-    cur = db.execute('select title, text from entries order by id desc')
+    cur = db.execute('select id, title, text, category from entries order by id desc')
     entries = cur.fetchall()
     return render_template('show_entries.html', entries=entries)
 
@@ -76,8 +75,31 @@ def show_entries():
 @app.route('/add', methods=['POST'])
 def add_entry():
     db = get_db()
-    db.execute('insert into entries (title, text) values (?, ?)',
-               [request.form['title'], request.form['text']])
+    db.execute('insert into entries (title, text, category) values (?, ?, ?)',
+               [request.form['title'], request.form['text'], request.form['category']])
     db.commit()
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
+
+
+@app.route('/delete', methods=['POST'])
+def delete_entries():
+    db = get_db()
+    row_id = request.form['task']
+    db.execute('DELETE FROM entries WHERE id = ?', (row_id,))
+    db.commit()
+    return redirect(url_for('show_entries'))
+
+
+@app.route('/filter', methods=['POST'])
+def filter_entries():
+    db = get_db()
+    row_category = request.form['category']
+    if row_category == 'all':
+        db.execute('SELECT * FROM entries').fetchall()
+    else:
+        db.execute('SELECT * FROM entries WHERE category = ?', (row_category,)).fetchall()
+    db.commit()
+    return redirect(url_for('show_entries'))
+
+

@@ -4,14 +4,39 @@
     <dl>
       <dt>Title:
       <dd><input type="text" size="30" name="title">
+      <dt>Category:
+      <dd><input type="text" size="30" name="category">
       <dt>Text:
       <dd><textarea name="text" rows="5" cols="40"></textarea>
       <dd><input type="submit" value="Share">
     </dl>
   </form>
+
+
   <ul class="entries">
+
+  <form action="/filter" method="post">
+    <select name="category">
+        <option value="" disabled selected>Select a category</option>
+        <option value = "all"> All Category  </option>
+        {% for entry in entries %}
+            <option>{{ entry.category }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Filter">
+</form>
+
   {% for entry in entries %}
-    <li><h2>{{ entry.title }}</h2>{{ entry.text|safe }}</li>
+      <li><h2>{{ entry.title }}</h2></li>
+      <li><h3>{{ entry.category|safe }}</h3></li>
+      <li>{{ entry.text|safe }}</li>
+
+
+         <form action="/delete" method="POST">
+                <input type="submit" value="Delete">
+                <input type="hidden" name="task" value="{{ entry.id }}">
+         </form>
+
   {% else %}
     <li><em>Unbelievable.  No entries here so far</em></li>
   {% endfor %}
