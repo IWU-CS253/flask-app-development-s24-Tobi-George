@@ -91,15 +91,16 @@ def delete_entries():
     return redirect(url_for('show_entries'))
 
 
-@app.route('/filter', methods=['POST'])
+@app.route('/filter', methods=['get'])
 def filter_entries():
     db = get_db()
-    row_category = request.form['category']
-    if row_category == 'all':
-        db.execute('SELECT * FROM entries').fetchall()
+    row_category = request.args.get('category')
+
+    if row_category == "all":
+        entries = db.execute('SELECT * FROM entries order by id desc').fetchall()
     else:
-        db.execute('SELECT * FROM entries WHERE category = ?', (row_category,)).fetchall()
-    db.commit()
-    return redirect(url_for('show_entries'))
+        entries = db.execute('SELECT * FROM entries WHERE category = ? order by id desc', (row_category,)).fetchall()
 
+    categories = db.execute('SELECT DISTINCT category FROM entries order by id desc').fetchall()
 
+    return render_template('show_entries.html', entries=entries, categories=categories)

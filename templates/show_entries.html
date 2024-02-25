@@ -15,12 +15,12 @@
 
   <ul class="entries">
 
-  <form action="/filter" method="post">
+<form action="/filter" method="get">
     <select name="category">
         <option value="" disabled selected>Select a category</option>
-        <option value = "all"> All Category  </option>
+        <option value="all">All Categories</option>
         {% for entry in entries %}
-            <option>{{ entry.category }}</option>
+            <option value="{{ entry.category }}">{{ entry.category }}</option>
         {% endfor %}
     </select>
     <input type="submit" value="Filter">
