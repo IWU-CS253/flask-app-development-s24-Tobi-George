@@ -85,22 +85,20 @@ def add_entry():
 @app.route('/delete', methods=['POST'])
 def delete_entries():
     db = get_db()
-    row_id = request.form['task']
+    row_id = request.form['notes']
     db.execute('DELETE FROM entries WHERE id = ?', (row_id,))
     db.commit()
     return redirect(url_for('show_entries'))
 
 
-@app.route('/filter', methods=['get'])
+@app.route('/filter', methods=['GET'])
 def filter_entries():
     db = get_db()
     row_category = request.args.get('category')
-
+    categories = db.execute('SELECT DISTINCT category FROM entries').fetchall()
     if row_category == "all":
-        entries = db.execute('SELECT * FROM entries order by id desc').fetchall()
+        all_entries = db.execute('SELECT * FROM entries order by id desc').fetchall()
+        return render_template('show_entries.html', entries=all_entries, categories=categories)
     else:
         entries = db.execute('SELECT * FROM entries WHERE category = ? order by id desc', (row_category,)).fetchall()
-
-    categories = db.execute('SELECT DISTINCT category FROM entries order by id desc').fetchall()
-
-    return render_template('show_entries.html', entries=entries, categories=categories)
+        return render_template('show_entries.html', entries=entries, categories=categories)
