@@ -39,3 +39,4 @@ flaskr.db
 
 # PyCharm
 .idea/.name
+.idea/sqldialects.xml
