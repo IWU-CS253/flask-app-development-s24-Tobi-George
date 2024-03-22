@@ -2,16 +2,32 @@
 {% block body %}
     <h1>Edit Post</h1>
     <form action="/show_entries" method="post" class="edit-entry">
-    <input type="hidden" name="id" value="{{ entry.id }}">
-    <dl>
-        <dt>Title:</dt>
-        <dd><input type="text" size="30" name="new-title" value="{{ entry.title }}"></dd>
-        <dt>Category:</dt>
-        <dd><input type="text" size="30" name="new-category" value="{{ entry.category }}"></dd>
-        <dt>Text:</dt>
-        <dd><textarea name="new-text" rows="5" cols="40">{{ entry.text }}</textarea></dd>
-        <dd><button type="submit">Save changes</button></dd>
-    </dl>
-</form>
-
+    <div class="container text-center">
+  <div class="row row-cols-4">
+       <div class="col">
+        <div class="mb-3">
+  <label for="exampleFormControlInput1" class="form-label">Title</label>
+  <input type="text" class="form-control" name = "new-title" id="exampleFormControlInput1" value="{{ entry.title }}">
+</div>
+       </div>
+       <div class="col">
+        <div class="mb-3">
+  <label for="exampleFormControlInput1" class="form-label">Category</label>
+  <input type="text" class="form-control" name = "new-category" id="exampleFormControlInput1" value="{{ entry.category }}">
+</div>
+       </div>
+       <div class="col">
+        <div class="mb-3">
+  <label for="exampleFormControlInput1" class="form-label">Text</label>
+  <input type="text" class="form-control" name = "new-text" id="exampleFormControlInput1" value="{{ entry.text }}">
+        </div>
+       </div>
+            <div class="col">
+        <div class="mb-3">
+  <button type="submit" class="btn btn-primary mb-3">Save changes</button>
+        </div>
+       </div>
+  </div>
+    </div>
+  </form>
 {% endblock %}
