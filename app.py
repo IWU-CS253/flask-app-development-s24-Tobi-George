@@ -102,3 +102,24 @@ def filter_entries():
     else:
         entries = db.execute('SELECT * FROM entries WHERE category = ? order by id desc', (row_category,)).fetchall()
         return render_template('show_entries.html', entries=entries, category=category)
+
+
+def get_entry_by_id(id):
+    db = get_db()
+    entry = db.execute('SELECT id, title, category, text FROM entries WHERE id = ?', (id,)).fetchone()
+    return entry
+
+@app.route('/edit', methods=['GET'])
+def edit_entry():
+    entry_id = request.args.get('id')
+    entry = get_entry_by_id(entry_id)
+    return render_template('edit.html', entry=entry)
+
+@app.route('/edit', methods=['POST'])
+def edit_entries_post():
+    db = get_db()
+    db.execute('UPDATE entries SET title = ?, category = ?, text = ? WHERE id = ?',
+               (request.form['new-title'], request.form['new-category'], request.form['new-text'], request.form.get('id')))
+    db.commit()
+    flash('New entry was successfully updated')
+    return redirect(url_for('show_entries'))

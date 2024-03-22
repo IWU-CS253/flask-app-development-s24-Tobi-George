@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h1>Edit Post</h1>
+    <form action="/show_entries" method="post" class="edit-entry">
+    <input type="hidden" name="id" value="{{ entry.id }}">
+    <dl>
+        <dt>Title:</dt>
+        <dd><input type="text" size="30" name="new-title" value="{{ entry.title }}"></dd>
+        <dt>Category:</dt>
+        <dd><input type="text" size="30" name="new-category" value="{{ entry.category }}"></dd>
+        <dt>Text:</dt>
+        <dd><textarea name="new-text" rows="5" cols="40">{{ entry.text }}</textarea></dd>
+        <dd><button type="submit">Save changes</button></dd>
+    </dl>
+</form>
+
+{% endblock %}

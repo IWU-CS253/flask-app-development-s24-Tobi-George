@@ -50,6 +50,22 @@ class FlaskrTestCase(unittest.TestCase):
             deleted_entry = db.execute('SELECT * FROM entries WHERE id = ?', (entry_id,)).fetchone()
         self.assertIsNone(deleted_entry)
 
+    def test_filter_entry(self):
+        rv_add = self.app.post('/add', data=dict(
+            title='Test Entry',
+            text='This is a test entry',
+            category='Test Category'
+        ), follow_redirects=True)
+
+        with flaskr.app.app_context():
+            db = flaskr.get_db()
+            entry_category = db.execute('SELECT DISTINCT category FROM entries').fetchone()[0]
+
+        response = self.app.get('/filter' + entry_category)
+
+        # Check if the added entry is displayed in the response
+        self.assertIn(b'Test Entry', response.data)
+
 
 if __name__ == '__main__':
     unittest.main()
