@@ -1,47 +1,76 @@
 {% extends "layout.html" %}
 {% block body %}
-  <form action="{{ url_for('add_entry') }}" method="post" class="add-entry">
-    <dl>
-      <dt>Title:
-      <dd><input type="text" size="30" name="title">
-      <dt>Category:
-      <dd><input type="text" size="30" name="category">
-      <dt>Text:
-      <dd><textarea name="text" rows="5" cols="40"></textarea>
-      <dd><input type="submit" value="Share">
-    </dl>
+<form action="{{ url_for('add_entry') }}" method="post" class="add-entry">
+    <div class="container text-center">
+  <div class="row row-cols-4">
+       <div class="col">
+        <div class="mb-3">
+  <label for="exampleFormControlInput1" class="form-label">Title</label>
+  <input type="text" class="form-control" name = "title" id="exampleFormControlInput1" placeholder="Type in title">
+</div>
+       </div>
+       <div class="col">
+        <div class="mb-3">
+  <label for="exampleFormControlInput1" class="form-label">Category</label>
+  <input type="text" class="form-control" name = "category" id="exampleFormControlInput1" placeholder="Type in category">
+</div>
+       </div>
+       <div class="col">
+        <div class="mb-3">
+  <label for="exampleFormControlInput1" class="form-label">Text</label>
+  <input type="text" class="form-control" name = "text" id="exampleFormControlInput1" placeholder="Type in text">
+        </div>
+       </div>
+            <div class="col">
+        <div class="mb-3">
+  <button type="submit" class="btn btn-primary mb-3">Share</button>
+        </div>
+       </div>
+  </div>
+    </div>
   </form>
 
 
-  <ul class="entries">
+<div style="text-align: center;">
+    <form action="/filter" method="get" style="display: inline-block;">
+        <select name="category" class="form-control">
+            <option value="" disabled selected>Select a category</option>
+            <option value="all">All Categories</option>
+            {% for entry in entries %}
+                <option value="{{ entry.category }}">{{ entry.category }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+</div>
 
-<form action="/filter" method="get">
-    <select name="category">
-        <option value="" disabled selected>Select a category</option>
-        <option value="all">All Categories</option>
+  <div class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2"> <!-- Center the content in the middle of the page -->
+      <h1 class="text-center">Entries</h1>
+      <ul class="list-group">
         {% for entry in entries %}
-            <option value="{{ entry.category }}">{{ entry.category }}</option>
-        {% endfor %}
-    </select>
-    <input type="submit" value="Filter">
-</form>
-
-  {% for entry in entries %}
-      <li><h2>{{ entry.title }}</h2></li>
-      <li><h3>{{ entry.category|safe }}</h3></li>
-      <li>{{ entry.text|safe }}</li>
-
-
-         <form action="/delete" method="POST">
-                <input type="submit" value="Delete">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col">
+              <h2>{{ entry.title }}</h2>
+              <h3>{{ entry.category|safe }}</h3>
+              <p>{{ entry.text|safe }}</p>
+            </div>
+            <div class="col-auto">
+              <form action="/delete" method="POST">
+                <input type="submit" class="btn btn-danger" value="Delete">
                 <input type="hidden" name="notes" value="{{ entry.id }}">
-         </form>
-
-      <a href="{{ url_for('edit_entry', entry_id=entry.id) }}">Edit</a>
-
-
-  {% else %}
-    <li><em>Unbelievable.  No entries here so far</em></li>
-  {% endfor %}
-  </ul>
+              </form>
+              <a href="{{ url_for('edit_entry', entry_id=entry.id) }}" class="btn btn-primary">Edit</a>
+            </div>
+          </div>
+        </li>
+        {% else %}
+        <li class="list-group-item text-center"><em>Unbelievable. No entries here so far</em></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
 {% endblock %}
